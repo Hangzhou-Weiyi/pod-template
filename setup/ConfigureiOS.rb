@@ -64,6 +64,12 @@ module Pod
         end
       end
 
+      Pod::BXSModuleManipulator.new({
+        :configurator => @configurator,
+        :module_path => "Pod/Classes",
+        :prefix => prefix
+      }).run
+
       Pod::ProjectManipulator.new({
         :configurator => @configurator,
         :xcodeproj_path => "templates/ios/Example/PROJECT.xcodeproj",
@@ -74,7 +80,7 @@ module Pod
 
       # There has to be a single file in the Classes dir
       # or a framework won't be created, which is now default
-      `touch Pod/Classes/ReplaceMe.m`
+      # `touch Pod/Classes/ReplaceMe.m` // 添加了target文件，不需要再创建
 
       `mv ./templates/ios/* ./`
 
