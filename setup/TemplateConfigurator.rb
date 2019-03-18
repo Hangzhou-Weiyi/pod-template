@@ -81,7 +81,7 @@ module Pod
           
           framework = nil
           if @use_bxs_module == :yes
-            puts "\nUse ObjC in BXSModule now."
+            puts "\nUsing ObjC language in BXSModule is default."
             framework = 'objc'.to_sym
           else
             framework = self.ask_with_answers("What language do you want to use?", ["Swift", "ObjC"]).to_sym
