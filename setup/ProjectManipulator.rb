@@ -73,7 +73,10 @@ module Pod
       # Replace the Podfile with a simpler one with only one target
       podfile_path = project_folder + "/Podfile"
       podfile_text = <<-RUBY
-use_frameworks!
+# use_frameworks!
+source 'git@git.winbaoxian.com:wy_ios/Specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
 target '#{test_target.name}' do
   pod '#{@configurator.pod_name}', :path => '../'
   

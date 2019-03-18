@@ -39,14 +39,14 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
-  # s.dependency 'BXSUIKit'
+  s.dependency 'BXSUIKit'
   # s.dependency 'RpcProtocols'
 
-  # s.prefix_header_contents = <<-EOS
-  # #import <BXSUIKit/BXSUIkit.h>
-  # #import <BXSUIKit/BXSUICode.h>
-  # #import <bxs_base_lib/Utils.h>
-  # #import <BXSLogger/NSObject+Logger.h>
-  # #import <Masonry/Masonry.h>
-  # EOS
+  s.prefix_header_contents = <<-EOS
+  #import <BXSUIKit/BXSUIkit.h>
+  #import <BXSUIKit/BXSUICode.h>
+  #import <bxs_base_lib/Utils.h>
+  #import <BXSLogger/NSObject+Logger.h>
+  #import <Masonry/Masonry.h>
+  EOS
 end

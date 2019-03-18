@@ -7,11 +7,14 @@
 //
 
 #import "CPDAppDelegate.h"
+#import <IconFont/TBCityIconFont.h>
 
 @implementation CPDAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [TBCityIconFont setFontName:@"iconfont"];
+
     // Override point for customization after application launch.
     return YES;
 }

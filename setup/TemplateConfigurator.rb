@@ -4,12 +4,13 @@ require 'colored2'
 module Pod
   class TemplateConfigurator
 
-    attr_reader :pod_name, :pods_for_podfile, :prefixes, :test_example_file, :username, :email
+    attr_reader :pod_name, :pods_for_podfile, :prefixes, :test_example_file, :username, :email, :use_bxs_module
 
     def initialize(pod_name)
       @pod_name = pod_name
       @pods_for_podfile = []
       @prefixes = []
+      @use_bxs_module = nil
       @message_bank = MessageBank.new(self)
     end
 
@@ -76,7 +77,16 @@ module Pod
         when :macos
           ConfigureMacOSSwift.perform(configurator: self)
         when :ios
-          framework = self.ask_with_answers("What language do you want to use?", ["Swift", "ObjC"]).to_sym
+          @use_bxs_module = self.ask_with_answers("Would you like to include BXSModule files with your library?", ["Yes", "No"]).to_sym
+          
+          framework = nil
+          if @use_bxs_module == :yes
+            puts 'Use ObjC in BXSModule now.'
+            framework = 'objc'.to_sym
+          else
+            framework = self.ask_with_answers("What language do you want to use?", ["Swift", "ObjC"]).to_sym
+          end
+
           case framework
             when :swift
               ConfigureSwift.perform(configurator: self)
@@ -164,8 +174,12 @@ module Pod
     end
 
     def set_test_framework(test_type, extension, folder)
+      puts "set_test_framework #{test_type}, #{extension}, #{folder}"
+
       content_path = "setup/test_examples/" + test_type + "." + extension
+      puts "#{content_path}"
       tests_path = "templates/" + folder + "/Example/Tests/Tests." + extension
+      puts "#{tests_path}"
       tests = File.read tests_path
       tests.gsub!("${TEST_EXAMPLE}", File.read(content_path) )
       File.open(tests_path, "w") { |file| file.puts tests }
