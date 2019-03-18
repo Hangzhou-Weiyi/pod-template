@@ -81,7 +81,7 @@ module Pod
           
           framework = nil
           if @use_bxs_module == :yes
-            puts 'Use ObjC in BXSModule now.'
+            puts "\nUse ObjC in BXSModule now."
             framework = 'objc'.to_sym
           else
             framework = self.ask_with_answers("What language do you want to use?", ["Swift", "ObjC"]).to_sym
@@ -174,12 +174,8 @@ module Pod
     end
 
     def set_test_framework(test_type, extension, folder)
-      puts "set_test_framework #{test_type}, #{extension}, #{folder}"
-
       content_path = "setup/test_examples/" + test_type + "." + extension
-      puts "#{content_path}"
       tests_path = "templates/" + folder + "/Example/Tests/Tests." + extension
-      puts "#{tests_path}"
       tests = File.read tests_path
       tests.gsub!("${TEST_EXAMPLE}", File.read(content_path) )
       File.open(tests_path, "w") { |file| file.puts tests }
