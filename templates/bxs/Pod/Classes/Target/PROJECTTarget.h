@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PROJECTTarget : BXSBaseTarget
 
+- (id)actionHome:(NSDictionary *)params;
+
 @end
 
 NS_ASSUME_NONNULL_END

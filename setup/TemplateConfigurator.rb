@@ -4,13 +4,12 @@ require 'colored2'
 module Pod
   class TemplateConfigurator
 
-    attr_reader :pod_name, :pods_for_podfile, :prefixes, :test_example_file, :username, :email, :use_bxs_module
+    attr_reader :pod_name, :pods_for_podfile, :prefixes, :test_example_file, :username, :email
 
     def initialize(pod_name)
       @pod_name = pod_name
       @pods_for_podfile = []
       @prefixes = []
-      @use_bxs_module = nil
       @message_bank = MessageBank.new(self)
     end
 
@@ -77,16 +76,9 @@ module Pod
         when :macos
           ConfigureMacOSSwift.perform(configurator: self)
         when :ios
-          @use_bxs_module = self.ask_with_answers("Would you like to include BXSModule files with your library?", ["Yes", "No"]).to_sym
           
-          framework = nil
-          if @use_bxs_module == :yes
-            puts "\nUsing ObjC language in BXSModule is default."
-            framework = 'objc'.to_sym
-          else
-            framework = self.ask_with_answers("What language do you want to use?", ["Swift", "ObjC"]).to_sym
-          end
-
+          framework = self.ask_with_answers("What language do you want to use?", ["Swift", "ObjC"]).to_sym
+          
           case framework
             when :swift
               ConfigureSwift.perform(configurator: self)

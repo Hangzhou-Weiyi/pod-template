@@ -21,14 +21,14 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'http://git.winbaoxian.com:8888/wy_ios/${POD_NAME}'
+  s.homepage         = 'http://git.winbaoxian.com/wy_ios/${POD_NAME}'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { '${USER_NAME}' => '${USER_EMAIL}' }
   s.source           = { :git => 'git@git.winbaoxian.com:wy_ios/${POD_NAME}.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = '${POD_NAME}/Classes/**/*'
   
@@ -39,14 +39,10 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
-  s.dependency 'BXSUIKit'
+  # s.dependency 'BXSUIKit'
   # s.dependency 'RpcProtocols'
 
-  s.prefix_header_contents = <<-EOS
-  #import <BXSUIKit/BXSUIkit.h>
-  #import <BXSUIKit/BXSUICode.h>
-  #import <bxs_base_lib/Utils.h>
-  #import <BXSLogger/NSObject+Logger.h>
-  #import <Masonry/Masonry.h>
-  EOS
+  # s.prefix_header_contents = <<-EOS
+  
+  # EOS
 end

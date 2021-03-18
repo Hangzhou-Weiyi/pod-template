@@ -9,4 +9,17 @@
 #import "Target_PROJECT.h"
 
 @implementation Target_PROJECT
+
+// - (UIViewController *)PROJECTViewController:(NSDictionary *)params {
+//    PROJECTViewController *vc = [[PROJECTViewController alloc] init];
+//    vc.uuid = params[@"uuid"];
+//    vc.msgType = [params[@"msgType"] integerValue];
+//    return vc;
+// }
+
+//  - (void)PROJECTViewController_setBlock:(NSDictionary *)params {
+//     PROJECTViewController *vc = params[@"vc"];
+//     vc.block = params[@"block"];
+// }
+
 @end

@@ -53,36 +53,32 @@ module Pod
       end
 
       prefix = nil
-      if @configurator.use_bxs_module == :yes
-        prefix = 'BXS'
-      else
-        loop do
-          prefix = configurator.ask("What is your class prefix")
-  
-          if prefix.include?(' ')
-            puts 'Your class prefix cannot contain spaces.'.red
-          else
-            break
-          end
+
+      loop do
+        prefix = configurator.ask("What is your class prefix").upcase
+
+        if prefix.include?(' ')
+          puts 'Your class prefix cannot contain spaces.'.red
+        else
+          break
         end
       end
-      
-      Pod::BXSModuleManipulator.new({
-        :configurator => @configurator,
-        :prefix => prefix
-      }).run
+
+      use_bxs_module = self.ask_with_answers("Would you like to include BXSModule files with your library?", ["Yes", "No"]).to_sym
 
       Pod::ProjectManipulator.new({
         :configurator => @configurator,
         :xcodeproj_path => "templates/ios/Example/PROJECT.xcodeproj",
         :platform => :ios,
         :remove_demo_project => (keep_demo == :no),
-        :prefix => prefix
+        :prefix => prefix,
+        :use_bxs_module => use_bxs_module
       }).run
+
 
       # There has to be a single file in the Classes dir
       # or a framework won't be created, which is now default
-      `touch Pod/Classes/ReplaceMe.m` unless @configurator.use_bxs_module == :yes # 添加了target文件，不需要再创建
+      `touch Pod/Classes/ReplaceMe.m` unless use_bxs_module == :yes # 添加了target文件，不需要再创建
 
       `mv ./templates/ios/* ./`
 

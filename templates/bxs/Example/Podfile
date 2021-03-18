@@ -1,6 +1,9 @@
-use_frameworks!
+source 'git@git.winbaoxian.com:wy_ios/Specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
 
-platform :ios, '9.0'
+use_modular_headers!
+
+platform :ios, '10.0'
 
 target '${POD_NAME}_Example' do
   pod '${POD_NAME}', :path => '../'

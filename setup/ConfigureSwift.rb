@@ -40,12 +40,15 @@ module Pod
           end
       end
 
+      use_bxs_module = self.ask_with_answers("Would you like to include BXSModule files with your library?", ["Yes", "No"]).to_sym
+
       Pod::ProjectManipulator.new({
         :configurator => @configurator,
         :xcodeproj_path => "templates/swift/Example/PROJECT.xcodeproj",
         :platform => :ios,
         :remove_demo_project => (keep_demo == :no),
-        :prefix => ""
+        :prefix => "",
+        :use_bxs_module => use_bxs_module
       }).run
 
       # There has to be a single file in the Classes dir

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = '${POD_NAME}'
-  s.version          = '1.0.0'
+  s.version          = '0.1.0'
   s.summary          = 'A short description of ${POD_NAME}.'
 
 # This description is used to generate tags and improve search results.
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'http://git.winbaoxian.com:8888/wy_ios/${POD_NAME}'
+  s.homepage         = 'https://git.winbaoxian.com/wy_ios/${POD_NAME}'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { '${USER_NAME}' => '${USER_EMAIL}' }
@@ -43,10 +43,5 @@ TODO: Add long description of the pod here.
   # s.dependency 'RpcProtocols'
 
   # s.prefix_header_contents = <<-EOS
-  # #import <BXSUIKit/BXSUIkit.h>
-  # #import <BXSUIKit/BXSUICode.h>
-  # #import <bxs_base_lib/Utils.h>
-  # #import <BXSLogger/NSObject+Logger.h>
-  # #import <Masonry/Masonry.h>
   # EOS
 end

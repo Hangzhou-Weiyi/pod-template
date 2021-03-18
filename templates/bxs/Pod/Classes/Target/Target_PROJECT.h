@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Target_PROJECT : NSObject
 
+// - (UIViewController *)PROJECTViewController:(NSDictionary *)params;
+
+// - (void)PROJECTViewController_setBlock:(NSDictionary *)params;
+
 @end
 
 NS_ASSUME_NONNULL_END
