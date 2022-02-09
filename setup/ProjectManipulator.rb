@@ -3,7 +3,7 @@ require 'xcodeproj'
 module Pod
 
   class ProjectManipulator
-    attr_reader :configurator, :xcodeproj_path, :platform, :remove_demo_target, :string_replacements, :prefix
+    attr_reader :configurator, :xcodeproj_path, :platform, :remove_demo_target, :string_replacements, :prefix , :use_bxs_module, :appul_path
 
     def self.perform(options)
       new(options).perform
@@ -15,10 +15,14 @@ module Pod
       @platform = options.fetch(:platform)
       @remove_demo_target = options.fetch(:remove_demo_project)
       @prefix = options.fetch(:prefix)
+      @use_bxs_module = options.fetch(:use_bxs_module)
     end
 
     def run
+      @appul_path = @configurator.pod_name.gsub("BXS", "").gsub(@prefix, "").capitalize
+
       @string_replacements = {
+        "APPULPATH" => @appul_path,
         "PROJECT_OWNER" => @configurator.user_name,
         "TODAYS_DATE" => @configurator.date,
         "TODAYS_YEAR" => @configurator.year,
@@ -34,6 +38,8 @@ module Pod
 
       rename_files
       rename_project_folder
+
+      rename_module if @use_bxs_module
     end
 
     def add_podspec_metadata
@@ -72,7 +78,24 @@ module Pod
 
       # Replace the Podfile with a simpler one with only one target
       podfile_path = project_folder + "/Podfile"
-      podfile_text = <<-RUBY
+
+      if use_bxs_module == :yes
+        podfile_text = <<-RUBY
+# use_frameworks!
+use_modular_headers!
+source 'git@git.winbaoxian.com:wy_ios/Specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
+target '#{test_target.name}' do
+  pod '#{@configurator.pod_name}', :path => '../'
+  
+  ${INCLUDED_PODS}
+end
+RUBY
+
+        File.open(podfile_path, "w") { |file| file.puts podfile_text }
+      else
+        podfile_text = <<-RUBY
 use_frameworks!
 target '#{test_target.name}' do
   pod '#{@configurator.pod_name}', :path => '../'
@@ -80,7 +103,9 @@ target '#{test_target.name}' do
   ${INCLUDED_PODS}
 end
 RUBY
-      File.open(podfile_path, "w") { |file| file.puts podfile_text }
+
+        File.open(podfile_path, "w") { |file| file.puts podfile_text }
+      end
     end
 
     def project_folder
@@ -125,6 +150,47 @@ RUBY
 
     def replace_internal_project_settings
       Dir.glob(project_folder + "/**/**/**/**").each do |name|
+        next if Dir.exists? name
+        text = File.read(name)
+
+        for find, replace in @string_replacements
+            text = text.gsub(find, replace)
+        end
+
+        File.open(name, "w") { |file| file.puts text }
+      end
+    end
+
+    
+    def rename_module
+      pod = "./Pod/Classes"
+      rename_module_files(pod)
+      replace_module_content(pod)
+
+      ctcg = "./CTMediator_Category"
+      rename_module_folder(ctcg)
+      rename_module_files(ctcg)
+      replace_module_content(ctcg)
+    end
+    
+    def rename_module_folder(dir)
+      if Dir.exist? dir + "/PROJECT"
+        File.rename(dir + "/PROJECT", dir + "/" + @configurator.pod_name)
+      end
+    end
+
+    def rename_module_files(dir)
+      Dir.glob(dir + "/**/**/**/**").each do |name|
+        next if File.directory? name
+        before = name 
+        after = name.gsub("CPD", prefix).gsub("PROJECT", @configurator.pod_name).gsub("APPULPATH", @appul_path)
+        File.rename before, after
+      end
+
+    end
+
+    def replace_module_content(dir)
+      Dir.glob(dir + "/**/**/**/**").each do |name|
         next if Dir.exists? name
         text = File.read(name)
 

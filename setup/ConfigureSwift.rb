@@ -12,9 +12,24 @@ module Pod
     end
 
     def perform
-      keep_demo = configurator.ask_with_answers("Would you like to include a demo application with your library", ["Yes", "No"]).to_sym
+      use_bxs_module = configurator.ask_with_answers("Would you like to include BXSModule files with your library", ["Yes", "No"]).to_sym
+      case use_bxs_module
+        when :yes
+          `rm ./NAME.podspec`
+          `mv ./NAME-bxs.podspec ./NAME.podspec`
 
-      framework = configurator.ask_with_answers("Which testing frameworks will you use", ["Quick", "None"]).to_sym
+          `rm -rf ./Pod`
+          `mv ./templates/swift-bxs/Pod ./Pod`
+
+          `mv ./templates/swift-bxs/CTMediator_Category ./CTMediator_Category`
+
+          `rm -rf ./templates/swift`
+          `mv ./templates/swift-bxs ./templates/swift`
+      end
+
+      keep_demo = (use_bxs_module == :yes) ? :none : configurator.ask_with_answers("Would you like to include a demo application with your library", ["Yes", "No"]).to_sym
+
+      framework = (use_bxs_module == :yes) ? :none : configurator.ask_with_answers("Which testing frameworks will you use", ["Quick", "None"]).to_sym
       case framework
         when :quick
           configurator.add_pod_to_podfile "Quick', '~> 2.2.0"
@@ -25,7 +40,7 @@ module Pod
           configurator.set_test_framework "xctest", "swift", "swift"
       end
 
-      snapshots = configurator.ask_with_answers("Would you like to do view based testing", ["Yes", "No"]).to_sym
+      snapshots = (use_bxs_module == :yes) ? :none : configurator.ask_with_answers("Would you like to do view based testing", ["Yes", "No"]).to_sym
       case snapshots
         when :yes
           configurator.add_pod_to_podfile "FBSnapshotTestCase' , '~> 2.1.4"
@@ -45,7 +60,8 @@ module Pod
         :xcodeproj_path => "templates/swift/Example/PROJECT.xcodeproj",
         :platform => :ios,
         :remove_demo_project => (keep_demo == :no),
-        :prefix => ""
+        :prefix => "",
+        :use_bxs_module => use_bxs_module
       }).run
 
       # There has to be a single file in the Classes dir
@@ -56,6 +72,8 @@ module Pod
 
       # remove podspec for osx
       `rm ./NAME-osx.podspec`
+
+      `rm ./NAME-bxs.podspec`
     end
   end
 

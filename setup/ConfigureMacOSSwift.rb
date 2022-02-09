@@ -30,7 +30,8 @@ module Pod
         :xcodeproj_path => "templates/macos-swift/Example/PROJECT.xcodeproj",
         :platform => :osx,
         :remove_demo_project => (keep_demo == :no),
-        :prefix => ""
+        :prefix => "",
+        :use_bxs_module => :no
       }).run
 
       `mv ./templates/macos-swift/* ./`
@@ -40,6 +41,8 @@ module Pod
       `touch Pod/Classes/ReplaceMe.swift`
 
       `mv ./NAME-osx.podspec ./NAME.podspec`
+
+      `rm ./NAME-bxs.podspec`
     end
   end
 

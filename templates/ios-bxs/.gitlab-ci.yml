@@ -1,0 +1,39 @@
+stages:
+  - build
+  - test
+  
+before_script:
+  - pwd
+  - echo project=$CI_PROJECT_NAME, branch=$CI_COMMIT_REF_NAME, version=$version
+  - export LANG=en_US.UTF-8
+  - git remote set-url origin git@git.winbaoxian.com:$CI_PROJECT_PATH.git
+  - curl -o BXSFastlane.tar.gz https://git.winbaoxian.com/api/v4/projects/549/repository/archive?private_token=$GIT_CI_PASS
+  - tar -zxvf BXSFastlane.tar.gz
+  - mv BXSFastlane-master*/* ./
+  - rm -rf BXSFastlane*
+
+lib_release_job:
+  stage: build
+  script:
+  - bundle exec fastlane do_lib_release version:$version project:$CI_PROJECT_NAME ref:$CI_COMMIT_REF_NAME
+  only:
+  - web
+  - trigger
+  tags:
+  - ios-group
+
+lib_example_build_job:
+  stage: build
+  script:
+  - bundle exec fastlane do_example_build project:$CI_PROJECT_NAME
+  only:
+  - master
+  - schedules
+  except:
+    refs:
+      - trigger
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /Bump version to/
+  tags:
+  - ios-group
+
