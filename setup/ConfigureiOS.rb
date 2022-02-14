@@ -12,10 +12,24 @@ module Pod
     end
 
     def perform
+      use_bxs_module = configurator.ask_with_answers("Would you like to include BXSModule files with your library?", ["Yes", "No"]).to_sym
+      case use_bxs_module
+        when :yes
+          `rm ./NAME.podspec`
+          `mv ./NAME-bxs.podspec ./NAME.podspec`
 
-      keep_demo = configurator.ask_with_answers("Would you like to include a demo application with your library", ["Yes", "No"]).to_sym
+          `rm -rf ./Pod`
+          `mv ./templates/ios-bxs/Pod ./Pod`
+          
+          `mv ./templates/ios-bxs/CTMediator_Category ./CTMediator_Category`
 
-      framework = configurator.ask_with_answers("Which testing frameworks will you use", ["Specta", "Kiwi", "None"]).to_sym
+          `rm -rf ./templates/ios`
+          `mv ./templates/ios-bxs ./templates/ios`
+      end
+
+      keep_demo = (use_bxs_module == :yes) ? :yes : configurator.ask_with_answers("Would you like to include a demo application with your library", ["Yes", "No"]).to_sym
+
+      framework = (use_bxs_module == :yes) ? :none : configurator.ask_with_answers("Which testing frameworks will you use", ["Specta", "Kiwi", "None"]).to_sym
       case framework
         when :specta
           configurator.add_pod_to_podfile "Specta"
@@ -35,7 +49,7 @@ module Pod
           configurator.set_test_framework("xctest", "m", "ios")
       end
 
-      snapshots = configurator.ask_with_answers("Would you like to do view based testing", ["Yes", "No"]).to_sym
+      snapshots = (use_bxs_module == :yes) ? :none : configurator.ask_with_answers("Would you like to do view based testing", ["Yes", "No"]).to_sym
       case snapshots
         when :yes
           configurator.add_pod_to_podfile "FBSnapshotTestCase"
@@ -64,8 +78,6 @@ module Pod
         end
       end
 
-      use_bxs_module = self.ask_with_answers("Would you like to include BXSModule files with your library?", ["Yes", "No"]).to_sym
-
       Pod::ProjectManipulator.new({
         :configurator => @configurator,
         :xcodeproj_path => "templates/ios/Example/PROJECT.xcodeproj",
@@ -84,6 +96,8 @@ module Pod
 
       # remove podspec for osx
       `rm ./NAME-osx.podspec`
+      
+      `rm ./NAME-bxs.podspec`
     end
   end
 

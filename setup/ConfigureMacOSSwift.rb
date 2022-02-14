@@ -41,6 +41,8 @@ module Pod
       `touch Pod/Classes/ReplaceMe.swift`
 
       `mv ./NAME-osx.podspec ./NAME.podspec`
+
+      `rm ./NAME-bxs.podspec`
     end
   end
 
